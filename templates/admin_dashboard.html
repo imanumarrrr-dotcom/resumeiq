@@ -1,0 +1,34 @@
+{% extends 'admin_base.html' %}{% block title %}Overview · ResumeIQ admin{% endblock %}
+{% block heading %}System overview{% endblock %}{% block sub %}Platform activity at a glance.{% endblock %}
+{% block admin %}
+<div class="kpis">
+  <div class="kpi"><b>{{ total_users }}</b><span>Users · {{ applicants }} applicants, {{ employers }} employers</span></div>
+  <div class="kpi"><b>{{ open_jobs }}<small class="muted fs-6"> / {{ total_jobs }}</small></b><span>Open jobs</span></div>
+  <div class="kpi"><b>{{ total_apps }}</b><span>Resumes processed</span></div>
+  <div class="kpi dark"><b>{{ avg_score|round|int }}%</b><span>Average match score</span></div>
+</div>
+<div class="cols">
+  <div class="card-x"><h5>Applications, last 7 days</h5>
+    <div class="chart">{% for d, c in chart %}<div><em>{{ c }}</em><i style="--h:{{ (c / peak * 100)|round|int }}%;--i:{{ loop.index0 }}" title="{{ c }} applications"></i>{{ d }}</div>{% endfor %}</div></div>
+  <div class="card-x"><h5>Application status</h5>
+    <div class="d-flex align-items-center gap-4 flex-wrap">
+      <div class="donut {{ 'empty' if not total_apps }}" style="--a:{{ donut_a }};--b:{{ donut_b }}"><b>{{ total_apps }}</b></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--gd)"></i>Shortlisted {{ by_status.get('Shortlisted', 0) }}</span>
+        <span><i class="dot" style="background:var(--md)"></i>Pending {{ by_status.get('Pending', 0) }}</span>
+        <span><i class="dot" style="background:var(--lw)"></i>Rejected {{ by_status.get('Rejected', 0) }}</span></div></div></div>
+</div>
+<div class="cols">
+  <div class="card-x"><div class="d-flex justify-content-between"><h5>Latest applications</h5><a class="small fw-bold" href="{{ url_for('admin_applications') }}">View all</a></div>
+    <ul class="mini">{% for a in new_apps %}<li><span><b>{{ a.applicant.name }}</b> <span class="muted">for {{ a.job.title }}</span></span><span class="st st-{{ a.status }}">{{ a.score|round|int }}% · {{ a.status }}</span></li>
+    {% else %}<li class="muted">No applications yet.</li>{% endfor %}</ul></div>
+  <div class="card-x"><h5>Match quality</h5>
+    {% for label, n, cls in buckets %}<div class="row-bar" style="grid-template-columns:120px 1fr 30px"><span>{{ label }}</span><div class="bar {{ cls }}"><i style="--w:{{ (n / total_apps * 100)|round|int if total_apps else 0 }}%"></i></div><span>{{ n }}</span></div>{% endfor %}</div>
+</div>
+<div class="cols">
+  <div class="card-x"><div class="d-flex justify-content-between"><h5>Most applied jobs</h5><a class="small fw-bold" href="{{ url_for('admin_jobs') }}">Manage</a></div>
+    <ul class="mini">{% for j in top_jobs %}<li><span><b>{{ j.title }}</b> <span class="muted">{{ j.employer.name }}</span></span><b>{{ j.applications|length }}</b></li>{% else %}<li class="muted">No jobs yet.</li>{% endfor %}</ul></div>
+  <div class="card-x"><div class="d-flex justify-content-between"><h5>New users</h5><a class="small fw-bold" href="{{ url_for('admin_users') }}">Manage</a></div>
+    <ul class="mini">{% for u in new_users %}<li><span><b>{{ u.name }}</b> <span class="muted">{{ u.role }}</span></span><span class="muted">{{ u.created_at.strftime('%d %b') }}</span></li>{% else %}<li class="muted">No users yet.</li>{% endfor %}</ul></div>
+</div>
+{% endblock %}

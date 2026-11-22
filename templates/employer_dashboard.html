@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% block title %}My jobs · ResumeIQ{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3"><div><h1>My job postings</h1><p class="muted mb-0">Create, edit or close your jobs.</p></div><a class="btn btn-brand" href="{{ url_for('job_new') }}">New job</a></div>
+<div class="kpis">
+  <div class="kpi"><b>{{ kpis.open }}</b><span>Open jobs</span></div>
+  <div class="kpi"><b>{{ kpis.applicants }}</b><span>Total applicants</span></div>
+  <div class="kpi"><b>{{ kpis.shortlisted }}</b><span>Shortlisted</span></div>
+  <div class="kpi dark"><b>{{ kpis.best|round|int }}%</b><span>Best match so far</span></div>
+</div>
+{% for job in jobs %}
+<div class="card-x d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div><h5 class="mb-1">{{ job.title }}</h5><span class="muted small">{{ job.applications|length }} applicant{{ '' if job.applications|length==1 else 's' }}</span>
+    <div>{% for s in job.skill_list %}<span class="chip">{{ s }}</span>{% endfor %}</div></div>
+  <div class="d-flex gap-2 align-items-center flex-wrap">
+    <span class="st {{ 'st-open' if job.is_open else 'st-closed' }}">{{ 'Open' if job.is_open else 'Closed' }}</span>
+    <a class="btn btn-sm btn-ink" href="{{ url_for('job_applicants', job_id=job.id) }}">View applicants</a>
+    <a class="btn btn-sm btn-soft" href="{{ url_for('job_edit', job_id=job.id) }}">Edit</a>
+    <form method="post" action="{{ url_for('job_toggle', job_id=job.id) }}">{{ csrf_field() }}<button class="btn btn-sm btn-soft">{{ 'Close' if job.is_open else 'Reopen' }}</button></form>
+  </div></div>
+{% else %}<div class="card-x text-center muted">No jobs yet. Post your first one to start receiving ranked applicants.</div>{% endfor %}
+{% endblock %}

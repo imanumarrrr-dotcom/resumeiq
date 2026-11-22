@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}Check my resume · ResumeIQ{% endblock %}
+{% block content %}
+<h1>Check my resume</h1><p class="muted">See your score for any open job without applying. The PDF is deleted right after it is read.</p>
+<form class="card-x apply-form" method="post" enctype="multipart/form-data" novalidate>{{ csrf_field() }}
+  <div class="row g-3 align-items-end">
+    <div class="col-md-5"><label class="form-label">Job</label><select class="form-select" name="job_id" required>
+      {% for j in jobs %}<option value="{{ j.id }}" {{ 'selected' if job and job.id==j.id }}>{{ j.title }}</option>{% else %}<option value="">No open jobs</option>{% endfor %}</select></div>
+    <div class="col-md-5"><label class="form-label">PDF resume, max 5 MB</label><input class="form-control" type="file" name="resume" accept=".pdf,application/pdf" required></div>
+    <div class="col-md-2"><button class="btn btn-brand w-100">Analyse</button></div>
+  </div>
+</form>
+{% if r %}{% with tips=True %}{% include '_report.html' %}{% endwith %}{% endif %}
+{% endblock %}

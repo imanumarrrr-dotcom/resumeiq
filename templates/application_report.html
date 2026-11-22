@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block title %}Match details · ResumeIQ{% endblock %}
+{% block content %}
+<a class="small fw-bold" href="{{ url_for('my_applications') }}">← My applications</a>
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 my-3"><div><h1 class="mb-1">{{ a.job.title }}</h1><span class="muted">Applied {{ a.applied_at.strftime('%d %b %Y') }}</span></div><span class="st st-{{ a.status }}">{{ a.status }}</span></div>
+{% with job=a.job, tips=True %}{% include '_report.html' %}{% endwith %}
+{% endblock %}

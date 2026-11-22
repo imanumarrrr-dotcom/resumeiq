@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block title %}{{ code }} · ResumeIQ{% endblock %}
+{% block content %}<div class="card-x text-center mx-auto my-5" style="max-width:460px;padding:2.5rem">
+<div style="font:800 4.5rem var(--display);color:var(--violet);line-height:1">{{ code }}</div><h1 class="mt-2">{{ title }}</h1><p class="muted">{{ text }}</p>
+<a class="btn btn-brand" href="{{ url_for('index') }}">Go to my dashboard</a></div>{% endblock %}

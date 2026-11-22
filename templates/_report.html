@@ -1,0 +1,31 @@
+{# expects r (analysis dict) and job; tips=True shows advice for applicants #}
+<div class="card-x rep-top">
+  <div class="ring {{ r.score|score_class }}" style="--p:{{ r.score }};--s:150px"><b>{{ r.score|round|int }}%</b></div>
+  <div style="flex:1;min-width:230px">
+    <h2 class="mb-1">{{ r.score|verdict }}</h2>
+    <p class="muted mb-2">for <b>{{ job.title }}</b>. Score = {{ W_TFIDF }}% wording similarity + {{ W_SKILL }}% required skills found.</p>
+    <div class="row-bar"><span>Skills found</span><div class="bar {{ r.skill_pct|score_class }}"><i style="--w:{{ r.skill_pct }}%"></i></div><span>{{ r.skill_pct|round|int }}%</span></div>
+    <div class="row-bar"><span>Wording match</span><div class="bar {{ r.tfidf|score_class }}"><i style="--w:{{ r.tfidf }}%"></i></div><span>{{ r.tfidf|round|int }}%</span></div>
+  </div>
+</div>
+<div class="rep-grid">
+  <div class="card-x">
+    <h5>Required skills</h5>
+    {% for s in r.matched %}<div class="row-bar"><span>{{ s }}</span><div class="bar"><i style="--w:100%"></i></div><span style="color:var(--gd)">Found</span></div>{% endfor %}
+    {% for s in r.missing %}<div class="row-bar"><span>{{ s }}</span><div class="bar low"><i style="--w:0%"></i></div><span style="color:var(--lw)">Missing</span></div>{% endfor %}
+    {% if not r.matched and not r.missing %}<p class="muted">This job has no required skills listed.</p>{% endif %}
+  </div>
+  <div>
+    <div class="card-x">
+      <h5>{{ 'Why it fits' if r.matched else 'What we found' }}</h5>
+      {% if r.matched %}<div class="tick">Covers {{ r.matched|length }} of {{ r.matched|length + r.missing|length }} required skills: {{ r.matched|join(', ') }}.</div>{% endif %}
+      {% if r.tfidf >= 30 %}<div class="tick">The resume's wording overlaps well with the job description.</div>{% endif %}
+      {% if r.missing %}<div class="tick no">Missing: {{ r.missing|join(', ') }}.{% if tips %} If you have these, name them explicitly in your resume.{% endif %}</div>{% endif %}
+      {% if not r.terms %}<div class="tick no">No readable text found. Scanned PDFs cannot be scored; export a text PDF instead.</div>{% endif %}
+    </div>
+    {% if r.terms %}<div class="card-x panel-night night">
+      <h5>Most-used terms in the resume</h5>
+      {% for w, p in r.terms %}<div class="row-bar" style="grid-template-columns:110px 1fr 40px"><span>{{ w }}</span><div class="bar vio"><i style="--w:{{ p }}%"></i></div><span>{{ p }}</span></div>{% endfor %}
+    </div>{% endif %}
+  </div>
+</div>

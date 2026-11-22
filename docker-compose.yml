@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
+    volumes:
+      - appdata:/data        # database + uploaded resumes survive restarts
+    restart: unless-stopped
+volumes:
+  appdata:

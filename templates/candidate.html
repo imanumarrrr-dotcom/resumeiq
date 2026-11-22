@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}{{ a.applicant.name }} · ResumeIQ{% endblock %}
+{% block content %}
+<a class="small fw-bold" href="{{ url_for('job_applicants', job_id=a.job_id) }}">← Applicants for {{ a.job.title }}</a>
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3 my-3">
+  <div class="d-flex gap-3 align-items-center"><div class="ring" style="--p:100;--s:56px;--c:var(--lilac)"><b style="font-size:1.1rem">{{ a.applicant.name[:1]|upper }}</b></div>
+    <div><h1 class="mb-0">{{ a.applicant.name }}</h1><span class="muted">{{ a.applicant.email }} · applied {{ a.applied_at.strftime('%d %b %Y') }}</span></div></div>
+  <div class="d-flex gap-2 align-items-center flex-wrap">
+    <form method="post" action="{{ url_for('application_status', app_id=a.id) }}" class="d-flex gap-1">{{ csrf_field() }}
+      {% for s in statuses %}<button name="status" value="{{ s }}" class="btn btn-sm {{ 'btn-ink' if s==a.status else 'btn-soft' }}">{{ s }}</button>{% endfor %}</form>
+    <a class="btn btn-sm btn-brand" href="{{ url_for('resume_download', app_id=a.id) }}">Download resume</a></div>
+</div>
+{% with job=a.job, tips=False %}{% include '_report.html' %}{% endwith %}
+{% endblock %}

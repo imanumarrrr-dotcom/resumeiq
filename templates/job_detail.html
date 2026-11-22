@@ -1,0 +1,31 @@
+{% extends 'base.html' %}{% block title %}{{ job.title }} · ResumeIQ{% endblock %}
+{% block content %}
+<a class="small fw-bold" href="{{ url_for('job_board') }}">← All jobs</a>
+<div class="row g-4 mt-1">
+  <div class="col-lg-7"><div class="card-x" style="padding:1.8rem">
+    <div class="d-flex justify-content-between gap-2 flex-wrap"><h1 class="mb-1">{{ job.title }}</h1><span class="st {{ 'st-open' if job.is_open else 'st-closed' }}">{{ 'Open' if job.is_open else 'Closed' }}</span></div>
+    <p class="muted">{{ job.employer.name }} · posted {{ job.created_at.strftime('%d %b %Y') }}</p>
+    <p style="white-space:pre-line">{{ job.description }}</p>
+    <h5 class="mt-4">Required skills</h5><div>{% for s in job.skill_list %}<span class="chip">{{ s }}</span>{% endfor %}</div>
+  </div></div>
+  <div class="col-lg-5"><div class="card-x" style="position:sticky;top:90px">
+  {% if not current_user.is_authenticated %}
+    <h5>Apply to this job</h5><p class="muted">Log in as an applicant to upload your resume and see your match score.</p>
+    <a class="btn btn-brand me-2" href="{{ url_for('login') }}">Log in</a><a class="btn btn-soft" href="{{ url_for('register') }}">Sign up</a>
+  {% elif current_user.role != 'applicant' %}
+    <h5>Applicant view</h5><p class="muted mb-0">Only applicant accounts can apply.</p>
+  {% elif mine %}
+    <h5>You have applied</h5><div class="d-flex align-items-center gap-3 my-3"><div class="ring {{ mine.score|score_class }}" style="--p:{{ mine.score }};--s:90px"><b>{{ mine.score|round|int }}%</b></div><span class="st st-{{ mine.status }}">{{ mine.status }}</span></div>
+    <a class="btn btn-ink" href="{{ url_for('my_application', app_id=mine.id) }}">See match details</a>
+  {% elif not job.is_open %}
+    <h5>This job is closed</h5><p class="muted mb-0">It no longer accepts applications.</p>
+  {% else %}
+    <h5>Apply with your resume</h5>
+    <form class="apply-form" method="post" action="{{ url_for('apply', job_id=job.id) }}" enctype="multipart/form-data" novalidate>{{ csrf_field() }}
+      <label class="form-label">PDF resume, max 5 MB</label>
+      <input class="form-control mb-3" type="file" name="resume" accept=".pdf,application/pdf" required>
+      <button class="btn btn-brand">Apply now</button>
+      <a class="btn btn-soft ms-1" href="{{ url_for('analyzer') }}">Test first</a></form>
+  {% endif %}
+  </div></div>
+</div>{% endblock %}

@@ -1,0 +1,26 @@
+{% set ep = request.endpoint %}
+<header class="topbar"><div class="container d-flex align-items-center gap-3">
+  <a class="brand" href="{{ url_for('index') }}"><span class="mark"></span>ResumeIQ</a>
+  <nav class="links" aria-label="Main">
+  {% if current_user.is_authenticated and current_user.role == 'applicant' %}
+    <a class="{{ 'on' if ep in ('job_board','job_detail') }}" href="{{ url_for('job_board') }}">Job board</a>
+    <a class="{{ 'on' if ep in ('my_applications','my_application') }}" href="{{ url_for('my_applications') }}">My applications</a>
+    <a class="{{ 'on' if ep=='analyzer' }}" href="{{ url_for('analyzer') }}">Check my resume</a>
+  {% elif current_user.is_authenticated and current_user.role == 'employer' %}
+    <a class="{{ 'on' if ep in ('employer_dashboard','job_applicants','candidate_detail','job_edit') }}" href="{{ url_for('employer_dashboard') }}">My jobs</a>
+    <a class="{{ 'on' if ep=='job_new' }}" href="{{ url_for('job_new') }}">New job</a>
+  {% else %}
+    <a class="{{ 'on' if ep in ('job_board','job_detail') }}" href="{{ url_for('job_board') }}">Jobs</a>
+    {% if ep == 'index' %}<a href="#features">Features</a><a href="#how">How scoring works</a>{% endif %}
+  {% endif %}
+  </nav>
+  <div class="ms-auto d-flex align-items-center gap-2">
+  {% if current_user.is_authenticated %}
+    <span class="who d-none d-md-inline">{{ current_user.name }} · {{ current_user.role|capitalize }}</span>
+    <form method="post" action="{{ url_for('logout') }}">{{ csrf_field() }}<button class="btn btn-sm btn-soft">Log out</button></form>
+  {% else %}
+    <a class="btn btn-sm btn-soft" href="{{ url_for('login') }}">Log in</a>
+    <a class="btn btn-sm btn-brand" href="{{ url_for('register') }}">Get started</a>
+  {% endif %}
+  </div>
+</div></header>

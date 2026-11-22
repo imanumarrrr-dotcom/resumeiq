@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}{% set ep = request.endpoint %}
+<div class="adm">
+  <aside class="adm-side">
+    <a class="brand" href="{{ url_for('admin_dashboard') }}"><span class="mark"></span>ResumeIQ</a>
+    <a class="nav-i {{ 'on' if ep=='admin_dashboard' }}" href="{{ url_for('admin_dashboard') }}">Overview</a>
+    <a class="nav-i {{ 'on' if ep=='admin_users' }}" href="{{ url_for('admin_users') }}">Users</a>
+    <a class="nav-i {{ 'on' if ep=='admin_jobs' }}" href="{{ url_for('admin_jobs') }}">Job postings</a>
+    <a class="nav-i {{ 'on' if ep=='admin_applications' }}" href="{{ url_for('admin_applications') }}">Applications</a>
+    <div class="foot"><div class="text-white fw-bold">{{ current_user.name }}</div><div class="mb-2">Administrator</div>
+      <form method="post" action="{{ url_for('logout') }}">{{ csrf_field() }}<button class="btn btn-sm btn-soft">Log out</button></form></div>
+  </aside>
+  <main class="adm-main">
+    {% with flash_wide=true %}{% include '_flash.html' %}{% endwith %}
+    <div class="adm-head"><div><h1 class="mb-1">{% block heading %}{% endblock %}</h1><p class="muted mb-0">{% block sub %}{% endblock %}</p></div>{% block actions %}{% endblock %}</div>
+    {% block admin %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

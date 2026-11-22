@@ -1,0 +1,70 @@
+{% extends 'base.html' %}{% block title %}ResumeIQ · Find your ideal job{% endblock %}
+{% block mainclass %}{% endblock %}
+{% block content %}
+<section class="hero"><div class="container">
+  <div>
+    <h1>Find your<br>ideal job</h1>
+    <p class="lead">Upload your PDF resume, see exactly how well it matches each open role, and ask our assistant to search the live job board for you.</p>
+    <form class="search mt-4" action="{{ url_for('job_board') }}" method="get" role="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input name="q" placeholder="Search by job title or skill" aria-label="Search jobs"><button class="btn btn-brand">Search</button>
+    </form>
+    <div class="stat-tile">
+      <div class="big"><b>{{ stats.jobs }}</b><span>open jobs</span></div>
+      <div><h5 class="mb-1">{{ stats.resumes }} resumes scored</h5><span class="muted small">by {{ stats.people }} applicants and employers.</span><br><a href="{{ url_for('job_board') }}" class="small fw-bold">Browse all jobs</a></div>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="float" style="top:2%;left:6%"><span style="font-size:1.1rem">📄</span>resume.pdf uploaded</div>
+    <div class="demo">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ring" style="--p:81;--s:96px"><b>81%</b></div>
+        <div><b style="font-family:var(--display);font-size:1.15rem">Strong match</b><div class="muted small">Backend Developer · sample analysis</div></div>
+      </div>
+      <div class="row-bar" style="margin-top:1rem"><span>python</span><div class="bar"><i style="--w:100%"></i></div><span style="color:var(--gd)">Found</span></div>
+      <div class="row-bar"><span>flask</span><div class="bar"><i style="--w:100%"></i></div><span style="color:var(--gd)">Found</span></div>
+      <div class="row-bar mb-0"><span>docker</span><div class="bar low"><i style="--w:0%"></i></div><span style="color:var(--lw)">Missing</span></div>
+    </div>
+    <div class="float" style="bottom:3%;right:10%"><span class="mark" style="width:22px;height:22px"></span>Ranked #1 among applicants</div>
+  </div>
+</div></section>
+
+<section class="section" id="features"><div class="container">
+  <div class="feature">
+    <div><h2 style="font-size:2.2rem">See your score before you apply</h2>
+      <p class="muted">Every application is checked against the job's description and required skills. You get one clear number, the skills you already show, and the ones to add.</p>
+      <a class="btn btn-ink" href="{{ url_for('register') }}">Check my resume</a></div>
+    <div class="panel-night">
+      <div class="d-flex gap-4 align-items-center flex-wrap">
+        <div class="ring" style="--p:81;--s:150px"><b>81%</b></div>
+        <div style="flex:1;min-width:200px"><h5 class="text-white">Skills coverage</h5>
+          <div class="row-bar" style="grid-template-columns:90px 1fr 40px"><span>Python</span><div class="bar vio"><i style="--w:89%"></i></div><span>89</span></div>
+          <div class="row-bar" style="grid-template-columns:90px 1fr 40px"><span>SQL</span><div class="bar vio"><i style="--w:62%"></i></div><span>62</span></div>
+          <div class="row-bar" style="grid-template-columns:90px 1fr 40px"><span>Docker</span><div class="bar vio"><i style="--w:18%"></i></div><span>18</span></div></div>
+      </div><p class="small mt-3 mb-0" style="color:#a7acd6">Sample values shown for illustration.</p>
+    </div>
+  </div>
+  <div class="feature flip" style="margin-top:5rem">
+    <div class="card-x" style="padding:1.5rem">
+      <div class="mock-msg me">Find me Python jobs</div>
+      <div class="mock-msg ai">I found 2 open jobs matching "python":</div>
+      <div class="job mb-2" style="padding:.8rem 1rem"><b>Backend Developer</b><span class="meta">python, flask, sql</span></div>
+      <div class="job" style="padding:.8rem 1rem"><b>Data Analyst</b><span class="meta">python, pandas, sql</span></div>
+    </div>
+    <div><h2 style="font-size:2.2rem">An assistant that searches real jobs</h2>
+      <p class="muted">Ask in plain words. The chatbot reads the live job database, explains your match scores and tracks your applications. Employers get their top candidates; admins get platform stats.</p>
+      <button class="btn btn-brand" type="button" onclick="document.querySelector('.cw-launch').click()">Try the assistant</button></div>
+  </div>
+</div></section>
+
+<section class="section pt-0" id="how"><div class="container">
+  <h2 class="mb-4" style="font-size:2.2rem">How scoring works</h2>
+  <ol class="steps p-0">
+    <li><h5>Read the resume</h5><p class="muted mb-0">We extract the text from your PDF. Scans without text score 0%.</p></li>
+    <li><h5>Compare with the job</h5><p class="muted mb-0">{{ W_TFIDF }}% comes from how closely your wording matches the description. {{ W_SKILL }}% comes from required skills found.</p></li>
+    <li><h5>Rank the applicants</h5><p class="muted mb-0">Employers see candidates sorted by score, with matched and missing skills.</p></li>
+  </ol>
+  <div class="cta mt-5"><h2>Ready to find your next role?</h2><div class="d-flex gap-2"><a class="btn btn-brand" href="{{ url_for('register') }}">Create account</a><a class="btn btn-soft" href="{{ url_for('login') }}">Log in</a></div></div>
+</div></section>
+<footer class="site"><div class="container">© ResumeIQ. Resumes are stored privately and only employers of the job you apply to can open them.</div></footer>
+{% endblock %}

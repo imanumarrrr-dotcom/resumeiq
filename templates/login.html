@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% block title %}Log in · ResumeIQ{% endblock %}
+{% block mainclass %}{% endblock %}
+{% block content %}<div class="auth">
+  <div class="auth-art"><h2>Your resume, ranked fairly.</h2><p>Log in to see your match scores, applications and candidates.</p></div>
+  <div class="auth-form"><form method="post">{{ csrf_field() }}
+    <h1>Welcome back</h1><p class="muted">Log in to your dashboard.</p>
+    <label class="form-label">Email</label><input class="form-control mb-3" type="email" name="email" required autofocus>
+    <label class="form-label">Password</label><input class="form-control mb-3" type="password" name="password" required>
+    <div class="d-flex justify-content-between align-items-center"><button class="btn btn-brand">Log in</button><a href="{{ url_for('register') }}" class="fw-bold">Create account</a></div>
+  </form></div></div>{% endblock %}

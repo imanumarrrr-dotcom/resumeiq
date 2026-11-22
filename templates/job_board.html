@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block title %}Jobs · ResumeIQ{% endblock %}
+{% block content %}
+<div class="mb-4"><h1>{{ 'Open jobs' if not q else 'Results for “' ~ q ~ '”' }}</h1>
+<form class="search mt-3" method="get" role="search"><input name="q" value="{{ q }}" placeholder="Search by title or skill" aria-label="Search jobs"><button class="btn btn-brand">Search</button></form></div>
+<div class="jobs">
+{% for job in jobs %}<a class="job" href="{{ url_for('job_detail', job_id=job.id) }}">
+  <div class="d-flex justify-content-between gap-2"><h5>{{ job.title }}</h5>{% if job.id in applied %}<span class="st st-Shortlisted">Applied</span>{% endif %}</div>
+  <span class="meta">{{ job.employer.name }} · posted {{ job.created_at.strftime('%d %b %Y') }}</span>
+  <div>{% for s in job.skill_list[:5] %}<span class="chip">{{ s }}</span>{% endfor %}</div>
+  <span class="fw-bold mt-auto" style="color:var(--violet)">View and apply</span></a>
+{% else %}<div class="card-x text-center muted" style="grid-column:1/-1">No open jobs match your search.</div>{% endfor %}
+</div>{% endblock %}

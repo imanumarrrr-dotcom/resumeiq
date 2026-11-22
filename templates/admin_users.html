@@ -1,0 +1,16 @@
+{% extends 'admin_base.html' %}{% block title %}Users · ResumeIQ admin{% endblock %}
+{% block heading %}Users{% endblock %}{% block sub %}Suspend or delete accounts. Admin accounts are not listed.{% endblock %}
+{% block admin %}
+<form class="d-flex gap-2 flex-wrap mb-3" method="get">
+  <div class="search" style="max-width:340px"><input name="q" value="{{ q }}" placeholder="Search name or email" aria-label="Search users"></div>
+  <select class="form-select" style="width:auto;border-radius:999px" name="role" aria-label="Role" onchange="this.form.submit()">
+    <option value="">All roles</option><option value="applicant" {{ 'selected' if role=='applicant' }}>Applicants</option><option value="employer" {{ 'selected' if role=='employer' }}>Employers</option></select>
+  <button class="btn btn-ink">Filter</button></form>
+<div class="card-x table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Status</th><th></th></tr></thead><tbody>
+{% for u in users %}<tr><td><b>{{ u.name }}</b></td><td>{{ u.email }}</td><td><span class="chip" style="margin:0">{{ u.role|capitalize }}</span></td><td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+<td>{% if u.suspended %}<span class="st st-Rejected">Suspended</span>{% else %}<span class="st st-open">Active</span>{% endif %}</td>
+<td><div class="d-flex gap-2 justify-content-end">
+<form method="post" action="{{ url_for('admin_suspend', user_id=u.id) }}">{{ csrf_field() }}<button class="btn btn-sm btn-soft">{{ 'Reinstate' if u.suspended else 'Suspend' }}</button></form>
+<form method="post" action="{{ url_for('admin_delete_user', user_id=u.id) }}" data-confirm="Permanently delete {{ u.name }} and all their data?">{{ csrf_field() }}<button class="btn btn-sm btn-danger-soft">Delete</button></form></div></td></tr>
+{% else %}<tr><td colspan="6" class="text-center muted py-4">No users found.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

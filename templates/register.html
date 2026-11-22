@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}Sign up · ResumeIQ{% endblock %}
+{% block mainclass %}{% endblock %}
+{% block content %}<div class="auth">
+  <div class="auth-art"><h2>Hire or get hired with a clear score.</h2><p>Applicants see how they match. Employers see who matches best.</p></div>
+  <div class="auth-form"><form method="post">{{ csrf_field() }}
+    <h1>Create account</h1><p class="muted">Admin accounts are created by the system owner only.</p>
+    <label class="form-label">Full name</label><input class="form-control mb-3" name="name" required>
+    <label class="form-label">Email</label><input class="form-control mb-3" type="email" name="email" required>
+    <label class="form-label">Password (min 6 characters)</label><input class="form-control mb-3" type="password" name="password" minlength="6" required>
+    <label class="form-label">I am an</label>
+    <select class="form-select mb-3" name="role"><option value="applicant">Applicant</option><option value="employer">Employer</option></select>
+    <div class="d-flex justify-content-between align-items-center"><button class="btn btn-brand">Sign up</button><a href="{{ url_for('login') }}" class="fw-bold">Back to log in</a></div>
+  </form></div></div>{% endblock %}

@@ -1,0 +1,2 @@
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="{{ 'container' if not flash_wide }} pt-3">
+{% for cat, m in messages %}<div class="alert alert-{{ cat }} alert-dismissible fade show">{{ m }}<button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>{% endfor %}</div>{% endif %}{% endwith %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}Job details · ResumeIQ{% endblock %}
+{% block content %}<h1>{{ 'Edit job' if editing else 'New job' }}</h1><p class="muted">Applicants are scored against this description and skill list.</p>
+<form method="post" class="card-x" style="max-width:680px">{{ csrf_field() }}
+  <label class="form-label">Job title</label><input class="form-control mb-3" name="title" value="{{ request.form.title or job.title or '' }}" required>
+  <label class="form-label">Description</label><textarea class="form-control mb-3" name="description" rows="6" required>{{ request.form.description or job.description or '' }}</textarea>
+  <label class="form-label">Required skills (comma separated)</label><input class="form-control mb-3" name="skills" placeholder="python, flask, sql" value="{{ request.form.skills or job.skills or '' }}" required>
+  <button class="btn btn-brand">Save job</button> <a class="btn btn-soft" href="{{ url_for('employer_dashboard') }}">Cancel</a>
+</form>{% endblock %}
